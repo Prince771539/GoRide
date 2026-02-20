@@ -1,0 +1,41 @@
+@model GoRide.Models.ViewModels.VehicleViewModel
+
+@{
+    ViewData["Title"] = "Add Vehicle Type";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card card-custom p-4">
+                <h3 class="mb-4">Add New Vehicle Type</h3>
+                <form>
+                     <div class="mb-3">
+                        <label asp-for="Name" class="form-label">Vehicle Name</label>
+                        <input asp-for="Name" class="form-control" placeholder="e.g. Sedan, SUV, Bike" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Type" class="form-label">Category</label>
+                        <select asp-for="Type" class="form-select">
+                            <option>Bike</option>
+                            <option>Car</option>
+                            <option>Auto</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Capacity" class="form-label">Passenger Capacity</label>
+                        <input asp-for="Capacity" class="form-control" type="number" min="1" />
+                    </div>
+                     <div class="mb-3">
+                        <label asp-for="IconUrl" class="form-label">Bootstrap Icon Class</label>
+                        <input asp-for="IconUrl" class="form-control" placeholder="bi-car-front" />
+                        <small class="text-muted">Enter class name from Bootstrap Icons (e.g., bi-car-front)</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 mt-3">Add Vehicle</button>
+                    <a asp-action="VehicleList" class="btn btn-outline-secondary w-100 mt-2">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

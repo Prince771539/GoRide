@@ -1,0 +1,73 @@
+@model GoRide.Models.ViewModels.DriverDashboardViewModel
+
+@{
+    ViewData["Title"] = "Driver Dashboard";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>Hello, @Model.DriverName</h2>
+            <p class="text-muted">Ready to earn today?</p>
+        </div>
+        <div class="form-check form-switch">
+            <input class="form-check-input fs-3" type="checkbox" id="onlineToggle" @(Model.IsOnline ? "checked" : "")>
+            <label class="form-check-label fs-5 ms-2 fw-bold @(Model.IsOnline ? "text-success" : "text-secondary")" for="onlineToggle">
+                @(Model.IsOnline ? "ONLINE" : "OFFLINE")
+            </label>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card card-custom h-100 p-4 border-start border-5 border-success">
+                <h5 class="text-muted">Today's Earnings</h5>
+                <h2 class="fw-bold">$@Model.TodayEarnings</h2>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card card-custom h-100 p-4 border-start border-5 border-primary">
+                <h5 class="text-muted">Trips Completed</h5>
+                <h2 class="fw-bold">@Model.TodayRides</h2>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card card-custom h-100 p-4 border-start border-5 border-warning">
+                <h5 class="text-muted">Driver Rating</h5>
+                <h2 class="fw-bold">4.8 <i class="bi bi-star-fill text-warning fs-4"></i></h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Request Alert -->
+    @if (Model.CurrentRequest != null)
+    {
+        <div class="alert alert-warning border-warning shadow-sm" role="alert">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="alert-heading"><i class="bi bi-bell-fill"></i> New Ride Request!</h5>
+                    <p class="mb-0">Pickup: <strong>@Model.CurrentRequest.PickupLocation</strong> | Est. Fare: <strong>$@Model.CurrentRequest.EstimatedFare</strong></p>
+                </div>
+                <a asp-action="RideRequests" class="btn btn-warning fw-bold text-dark">View Request</a>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+             <div class="card card-custom h-100 p-4 text-center bg-light">
+                 <div class="mb-3 text-primary"><i class="bi bi-list-ul fs-1"></i></div>
+                 <h4>Manage Requests</h4>
+                 <a asp-action="RideRequests" class="btn btn-outline-primary mt-2">View Incoming</a>
+             </div>
+        </div>
+        <div class="col-md-6 mb-3">
+             <div class="card card-custom h-100 p-4 text-center bg-light">
+                 <div class="mb-3 text-success"><i class="bi bi-cash-coin fs-1"></i></div>
+                 <h4>Earnings Report</h4>
+                 <a asp-action="Earnings" class="btn btn-outline-success mt-2">View Details</a>
+             </div>
+        </div>
+    </div>
+</div>

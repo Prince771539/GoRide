@@ -1,0 +1,63 @@
+@model GoRide.Models.ViewModels.DriverProfileViewModel
+
+@{
+    ViewData["Title"] = "Driver Profile";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="card card-custom p-4">
+                <div class="d-flex align-items-center mb-4 border-bottom pb-4">
+                    <div class="bg-warning rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 80px; height: 80px;">
+                         <i class="bi bi-person-fill fs-1 text-dark"></i>
+                    </div>
+                    <div>
+                        <h3>@Model.FullName</h3>
+                        <p class="mb-0 text-muted">@Model.VehicleType Driver</p>
+                         <div class="text-warning">
+                             @for (int i = 0; i < 5; i++)
+                             {
+                                 if (i < Math.Round(Model.Rating)) { <i class="bi bi-star-fill"></i> }
+                                 else { <i class="bi bi-star"></i> }
+                             }
+                             <span class="text-dark ms-2 fw-bold">@Model.Rating</span>
+                         </div>
+                    </div>
+                </div>
+                
+                <h5 class="text-secondary mb-3">Personal Information</h5>
+                <form>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Email</label>
+                            <input type="text" class="form-control" readonly value="@Model.Email" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Phone</label>
+                            <input type="text" class="form-control" readonly value="@Model.Phone" />
+                        </div>
+                    </div>
+                     <div class="row mb-4">
+                        <div class="col-md-12">
+                            <label class="form-label text-muted">License Number</label>
+                            <input type="text" class="form-control" readonly value="@Model.LicenseNumber" />
+                        </div>
+                    </div>
+
+                    <h5 class="text-secondary mb-3">Vehicle Information</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Vehicle Model</label>
+                            <input type="text" class="form-control" readonly value="@Model.VehicleModel" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Vehicle Number</label>
+                            <input type="text" class="form-control" readonly value="@Model.VehicleNumber" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

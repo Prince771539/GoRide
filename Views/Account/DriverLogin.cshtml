@@ -1,0 +1,49 @@
+@model GoRide.Models.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Driver Login";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card card-custom p-4 border-warning border-2">
+                <div class="text-center mb-4">
+                    <i class="bi bi-car-front fs-1 text-warning"></i>
+                    <h3 class="mt-2">Driver Login</h3>
+                </div>
+                <form asp-action="DriverLogin" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <input asp-for="Email" class="form-control" placeholder="driver@example.com" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label"></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            <input asp-for="Password" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-warning w-100 py-2 fw-bold">Login to Drive</button>
+                    
+                    <div class="text-center mt-3">
+                        <a asp-action="DriverRegister" class="text-decoration-none text-warning">Join as a Driver</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

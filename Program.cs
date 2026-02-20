@@ -1,7 +1,15 @@
+using GoRide.DBData;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//registering the connection string for the database
+builder.Services.AddDbContext<AddDbContext>(options => options.UseSqlServer(
+    builder.Configuration.GetConnectionString("Con")
+));
 
 var app = builder.Build();
 

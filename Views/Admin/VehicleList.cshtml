@@ -1,0 +1,31 @@
+@model IEnumerable<GoRide.Models.ViewModels.VehicleViewModel>
+
+@{
+    ViewData["Title"] = "Vehicle Types";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Vehicle Types</h2>
+        <button class="btn btn-success"><i class="bi bi-plus-lg"></i> Add Vehicle Type</button>
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card card-custom h-100 text-center p-4">
+                    <div class="mb-3 text-primary">
+                        <i class="bi @item.IconUrl fs-1"></i>
+                    </div>
+                    <h3>@item.Name</h3>
+                    <p class="text-muted">Type: @item.Type | Capacity: @item.Capacity</p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <button class="btn btn-outline-secondary">Edit</button>
+                        <button class="btn btn-outline-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

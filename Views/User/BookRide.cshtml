@@ -1,0 +1,82 @@
+@model GoRide.Models.ViewModels.BookRideViewModel
+
+@{
+    ViewData["Title"] = "Book a Ride";
+}
+
+<div class="container-fluid p-0">
+    <div class="row g-0">
+        <!-- Map Section (Left side on large screens) -->
+        <div class="col-lg-8 order-lg-2">
+            <div class="map-placeholder h-100" style="min-height: 80vh; background-color: #e9ecef;">
+                <div class="text-center">
+                    <i class="bi bi-map fs-1 text-muted"></i>
+                    <h3>Map View</h3>
+                    <p>Live map integration will appear here</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Form Section -->
+        <div class="col-lg-4 order-lg-1 bg-white shadow-lg" style="min-height: 80vh; z-index: 10;">
+            <div class="p-4">
+                <h3 class="mb-4">Where to?</h3>
+                <form asp-action="BookRide" method="post">
+                    <div class="mb-3">
+                        <label class="form-label text-muted small">PICKUP</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-record-circle text-success"></i></span>
+                            <input asp-for="PickupLocation" class="form-control bg-light border-start-0" placeholder="Current Location" value="My Location" />
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label text-muted small">DROP OFF</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-geo-alt-fill text-danger"></i></span>
+                            <input asp-for="DropLocation" class="form-control bg-light border-start-0" placeholder="Enter Destination" />
+                        </div>
+                    </div>
+
+                    <h5 class="mb-3">Choose a Ride</h5>
+                    <!-- Ride Options Mockup -->
+                    <div class="list-group mb-4">
+                        <label class="list-group-item d-flex gap-3 align-items-center cursor-pointer">
+                            <input class="form-check-input flex-shrink-0" type="radio" name="VehicleType" id="bike" value="Bike" checked>
+                            <i class="bi bi-bicycle fs-2"></i>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0">Bike</h6>
+                                <small class="text-muted">1 person</small>
+                            </div>
+                            <div class="fw-bold">$45</div>
+                        </label>
+                        <label class="list-group-item d-flex gap-3 align-items-center cursor-pointer">
+                            <input class="form-check-input flex-shrink-0" type="radio" name="VehicleType" id="auto" value="Auto">
+                            <i class="bi bi-train-freight-front fs-2"></i> <!-- Closest to Auto -->
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0">Auto</h6>
+                                <small class="text-muted">3 people</small>
+                            </div>
+                            <div class="fw-bold">$75</div>
+                        </label>
+                        <label class="list-group-item d-flex gap-3 align-items-center cursor-pointer">
+                            <input class="form-check-input flex-shrink-0" type="radio" name="VehicleType" id="car" value="Car">
+                            <i class="bi bi-car-front fs-2"></i>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0">Mini</h6>
+                                <small class="text-muted">4 people</small>
+                            </div>
+                            <div class="fw-bold">$120</div>
+                        </label>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-dark btn-lg py-3">
+                            Confirm Booking <i class="bi bi-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

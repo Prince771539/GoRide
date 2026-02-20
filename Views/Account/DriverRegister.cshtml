@@ -1,0 +1,89 @@
+@model GoRide.Models.ViewModels.DriverRegisterViewModel
+
+@{
+    ViewData["Title"] = "Become a Driver";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card card-custom p-4 border-warning border-top-0">
+                <div class="text-center mb-4">
+                    <i class="bi bi-steering-wheel fs-1 text-warning"></i>
+                    <h3 class="mt-2 text-warning">Driver Registration</h3>
+                    <p class="text-muted">Start earning by driving with GoRide</p>
+                </div>
+                <form asp-action="DriverRegister" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    
+                    <h5 class="mb-3 text-secondary border-bottom pb-2">Personal Details</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="FullName" class="form-label"></label>
+                            <input asp-for="FullName" class="form-control" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="PhoneNumber" class="form-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="LicenseNumber" class="form-label"></label>
+                            <input asp-for="LicenseNumber" class="form-control" />
+                            <span asp-validation-for="LicenseNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <h5 class="mb-3 mt-3 text-secondary border-bottom pb-2">Vehicle Details</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="VehicleType" class="form-label"></label>
+                            <select asp-for="VehicleType" class="form-select">
+                                <option value="">Select Type</option>
+                                <option value="Bike">Bike</option>
+                                <option value="Car">Car</option>
+                                <option value="Auto">Auto Rickshaw</option>
+                            </select>
+                            <span asp-validation-for="VehicleType" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="VehicleNumber" class="form-label"></label>
+                            <input asp-for="VehicleNumber" class="form-control" placeholder="KA-01-AB-1234" />
+                            <span asp-validation-for="VehicleNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <h5 class="mb-3 mt-3 text-secondary border-bottom pb-2">Security</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ConfirmPassword" class="form-label"></label>
+                            <input asp-for="ConfirmPassword" class="form-control" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-warning w-100 py-2 fw-bold mt-3">Register Driver</button>
+                    
+                    <div class="text-center mt-3">
+                        <a asp-action="DriverLogin" class="text-decoration-none">Already have a driver account? Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
