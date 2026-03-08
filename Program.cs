@@ -10,6 +10,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AddDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("Con")
 ));
+builder.Services.AddSession();
 
 var app = builder.Build();
 
@@ -32,4 +33,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.UseSession();
 app.Run();

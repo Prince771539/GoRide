@@ -1,82 +1,85 @@
-@model GoRide.Models.ViewModels.BookRideViewModel
+@model GoRide.Models.ViewModels.Ride.BookingVM
 
 @{
     ViewData["Title"] = "Book a Ride";
 }
 
-<div class="container-fluid p-0">
-    <div class="row g-0">
-        <!-- Map Section (Left side on large screens) -->
-        <div class="col-lg-8 order-lg-2">
-            <div class="map-placeholder h-100" style="min-height: 80vh; background-color: #e9ecef;">
-                <div class="text-center">
-                    <i class="bi bi-map fs-1 text-muted"></i>
-                    <h3>Map View</h3>
-                    <p>Live map integration will appear here</p>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Map Section -->
+        <div class="col-lg-8 mb-4">
+            <div class="map-container shadow-sm border">
+                <div class="map-marker"><i class="bi bi-geo-alt-fill"></i></div>
+                <div class="position-absolute bottom-0 start-0 p-3 bg-white m-3 rounded shadow-sm">
+                    <small class="text-muted">Map Simulation</small>
+                    <p class="mb-0 fw-bold">Select Pickup & Drop to see route</p>
                 </div>
             </div>
         </div>
 
-        <!-- Booking Form Section -->
-        <div class="col-lg-4 order-lg-1 bg-white shadow-lg" style="min-height: 80vh; z-index: 10;">
-            <div class="p-4">
-                <h3 class="mb-4">Where to?</h3>
+        <!-- Booking Form -->
+        <div class="col-lg-4">
+            <div class="card card-custom p-4">
+                <h4 class="mb-4">Where to?</h4>
                 <form asp-action="BookRide" method="post">
                     <div class="mb-3">
-                        <label class="form-label text-muted small">PICKUP</label>
+                        <label asp-for="PickupAddress" class="form-label text-muted small">PICKUP</label>
                         <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-record-circle text-success"></i></span>
-                            <input asp-for="PickupLocation" class="form-control bg-light border-start-0" placeholder="Current Location" value="My Location" />
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-dot text-success fs-4"></i></span>
+                            <input asp-for="PickupAddress" class="form-control border-start-0" placeholder="Enter pickup location" />
                         </div>
+                        <span asp-validation-for="PickupAddress" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-4">
-                        <label class="form-label text-muted small">DROP OFF</label>
+                        <label asp-for="DropAddress" class="form-label text-muted small">DROP</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light border-end-0"><i class="bi bi-geo-alt-fill text-danger"></i></span>
-                            <input asp-for="DropLocation" class="form-control bg-light border-start-0" placeholder="Enter Destination" />
+                            <input asp-for="DropAddress" class="form-control border-start-0" placeholder="Enter destination" />
+                        </div>
+                        <span asp-validation-for="DropAddress" class="text-danger small"></span>
+                    </div>
+
+                    <h6 class="mb-3">Select Vehicle</h6>
+                    <div class="d-flex gap-2 mb-4 overflow-auto pb-2">
+                        <!-- Bike -->
+                        <div class="card border flex-fill text-center p-2 cursor-pointer bg-light">
+                            <i class="bi bi-bicycle fs-2 text-primary"></i>
+                            <div class="small fw-bold mt-1">Bike</div>
+                            <div class="text-muted small">$35</div>
+                            <input type="radio" asp-for="VehicleTypeId" value="1" class="btn-check" id="v1" autocomplete="off" checked>
+                            <label class="btn btn-outline-primary btn-sm mt-2 w-100 stretched-link" for="v1">Select</label>
+                        </div>
+                        <!-- Auto -->
+                        <div class="card border flex-fill text-center p-2 cursor-pointer">
+                            <i class="bi bi-minecart-loaded fs-2 text-warning"></i>
+                            <div class="small fw-bold mt-1">Auto</div>
+                            <div class="text-muted small">$55</div>
+                            <input type="radio" asp-for="VehicleTypeId" value="2" class="btn-check" id="v2" autocomplete="off">
+                            <label class="btn btn-outline-primary btn-sm mt-2 w-100 stretched-link" for="v2">Select</label>
+                        </div>
+                         <!-- Car -->
+                        <div class="card border flex-fill text-center p-2 cursor-pointer">
+                            <i class="bi bi-car-front-fill fs-2 text-dark"></i>
+                            <div class="small fw-bold mt-1">Mini</div>
+                            <div class="text-muted small">$120</div>
+                            <input type="radio" asp-for="VehicleTypeId" value="3" class="btn-check" id="v3" autocomplete="off">
+                            <label class="btn btn-outline-primary btn-sm mt-2 w-100 stretched-link" for="v3">Select</label>
                         </div>
                     </div>
 
-                    <h5 class="mb-3">Choose a Ride</h5>
-                    <!-- Ride Options Mockup -->
-                    <div class="list-group mb-4">
-                        <label class="list-group-item d-flex gap-3 align-items-center cursor-pointer">
-                            <input class="form-check-input flex-shrink-0" type="radio" name="VehicleType" id="bike" value="Bike" checked>
-                            <i class="bi bi-bicycle fs-2"></i>
-                            <div class="flex-grow-1">
-                                <h6 class="mb-0">Bike</h6>
-                                <small class="text-muted">1 person</small>
-                            </div>
-                            <div class="fw-bold">$45</div>
-                        </label>
-                        <label class="list-group-item d-flex gap-3 align-items-center cursor-pointer">
-                            <input class="form-check-input flex-shrink-0" type="radio" name="VehicleType" id="auto" value="Auto">
-                            <i class="bi bi-train-freight-front fs-2"></i> <!-- Closest to Auto -->
-                            <div class="flex-grow-1">
-                                <h6 class="mb-0">Auto</h6>
-                                <small class="text-muted">3 people</small>
-                            </div>
-                            <div class="fw-bold">$75</div>
-                        </label>
-                        <label class="list-group-item d-flex gap-3 align-items-center cursor-pointer">
-                            <input class="form-check-input flex-shrink-0" type="radio" name="VehicleType" id="car" value="Car">
-                            <i class="bi bi-car-front fs-2"></i>
-                            <div class="flex-grow-1">
-                                <h6 class="mb-0">Mini</h6>
-                                <small class="text-muted">4 people</small>
-                            </div>
-                            <div class="fw-bold">$120</div>
-                        </label>
+                    <div class="d-flex justify-content-between mb-3">
+                         <span>Payment Method</span>
+                         <span class="fw-bold"><i class="bi bi-cash"></i> Cash</span>
                     </div>
 
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-dark btn-lg py-3">
-                            Confirm Booking <i class="bi bi-arrow-right ms-2"></i>
-                        </button>
-                    </div>
+                    <button type="submit" class="btn btn-dark w-100 py-2 fs-5">Confirm Ride</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

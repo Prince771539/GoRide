@@ -1,21 +1,36 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using GoRide.Models.ViewModels.User;
+using GoRide.Models.ViewModels.Ride;
+using GoRide.Models.Enums;
 using GoRide.Models.ViewModels;
+using GoRide.DBData;
+using GoRide.Filters;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace GoRide.Controllers
 {
+    [SessionAuth(UserRole.Passenger)]
     public class UserController : Controller
     {
-        public IActionResult Dashboard()
+        private readonly AddDbContext _context;
+
+        public UserController(AddDbContext context)
         {
-            var model = new UserDashboardViewModel
+            _context = context;
+        }
+
+        public async Task<IActionResult> Dashboard()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var totalRides = await _context.Rides.CountAsync(r => r.PassengerId == userId);
+            
+            var model = new UserDashboardStatsVM
             {
-                UserName = "John Doe",
-                TotalRides = 15,
-                RecentRides = new List<RideViewModel>
-                {
-                    new RideViewModel { RideId = "R123", Date = DateTime.Now.AddDays(-1), DropLocation = "Central Mall", Fare = 50, Status = "Completed" },
-                    new RideViewModel { RideId = "R124", Date = DateTime.Now.AddDays(-2), DropLocation = "Airport", Fare = 120, Status = "Completed" }
-                }
+                TotalRides = totalRides,
+                TotalSpent = 450.50, // Dummy
+                LastRideStatus = RideStatus.Completed // Dummy
             };
             return View(model);
         }
@@ -26,48 +41,73 @@ namespace GoRide.Controllers
         }
 
         [HttpPost]
-        public IActionResult BookRide(BookRideViewModel model)
+        [ValidateAntiForgeryToken]
+        public IActionResult BookRide(BookingVM model)
         {
             if (ModelState.IsValid)
             {
-                return RedirectToAction("TrackRide");
+                return RedirectToAction("TrackRide", new { rideId = "R999" });
             }
             return View(model);
         }
 
-        public IActionResult TrackRide()
+        public IActionResult TrackRide(string rideId)
         {
-            var model = new LiveTrackingViewModel
+            var model = new LiveTrackingVM
             {
-                RideId = "R999",
-                DriverName = "Mike Ross",
-                VehicleNumber = "KA-01-AB-1234",
+                RideId = rideId ?? "R999",
+                DriverName = "Mike Driver",
                 DriverPhone = "9876543210",
-                CurrentLocation = "Main Street, 4th Block",
-                ETA = "5 Mins",
-                Status = "Arriving"
+                VehicleNumber = "KA-01-AB-1234",
+                VehicleModel = "Toyota Etios",
+                Status = RideStatus.Started,
+                ETA = "4 mins",
+                CurrentLocation = "Main Street, Block 4",
+                Fare = 120.50
             };
             return View(model);
         }
 
-        public IActionResult RideHistory()
+        public async Task<IActionResult> RideHistory()
         {
-            var history = new List<RideViewModel>
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var history = await _context.Rides
+                .Where(r => r.PassengerId == userId)
+                .Select(r => new RideViewModel
+                {
+                    RideId = r.Id.ToString(),
+                    Date = r.RequestedAt,
+                    PickupLocation = r.PickupAddress,
+                    DropLocation = r.DropAddress,
+                    Fare = (double)(r.FinalFare == 0 ? r.EstimatedFare : r.FinalFare),
+                    Status = r.Status.ToString(),
+                    DriverName = r.Driver != null ? r.Driver.User.FullName : "Unassigned"
+                }).ToListAsync();
+
+            if (!history.Any())
             {
-                new RideViewModel { RideId = "R101", Date = DateTime.Now.AddDays(-5), PickupLocation = "Home", DropLocation = "Office", Fare = 45, Status = "Completed", DriverName = "Alex" },
-                new RideViewModel { RideId = "R102", Date = DateTime.Now.AddDays(-4), PickupLocation = "Office", DropLocation = "Gym", Fare = 30, Status = "Completed", DriverName = "Sam" }
-            };
+                history = new List<RideViewModel>
+                {
+                    new RideViewModel { RideId = "R101", Date = DateTime.Now.AddDays(-2), PickupLocation = "Home", DropLocation = "Office", Fare = 55, Status = "Completed", DriverName = "Alex" },
+                    new RideViewModel { RideId = "R102", Date = DateTime.Now.AddDays(-5), PickupLocation = "Mall", DropLocation = "Home", Fare = 80, Status = "Cancelled", DriverName = "John" }
+                };
+            }
             return View(history);
         }
 
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile()
         {
-            var model = new UserProfileViewModel
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var user = await _context.Users.FindAsync(userId);
+
+            if (user == null) return NotFound();
+
+            var model = new ProfileVM
             {
-                FullName = "John Doe",
-                Email = "john@example.com",
-                Phone = "9988776655",
-                Address = "123, Layout"
+                FullName = user.FullName,
+                Email = user.Email,
+                Phone = user.PhoneNumber,
+                Address = "123 Cherry Lane, Metro City" // Dummy
             };
             return View(model);
         }

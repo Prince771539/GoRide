@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using GoRide.Models.Enums;
 
 namespace GoRide.Models
 {
@@ -9,32 +8,27 @@ namespace GoRide.Models
         [Key]
         public int UserId { get; set; }
 
-        [Required]
-        [StringLength(100)]
+        [Required, StringLength(100)]
         public string FullName { get; set; }
 
-        [Required]
-        [Phone]
-        [StringLength(15)]
-        public string Phone { get; set; }
-
-        [Required]
-        [EmailAddress]
-        [StringLength(100)]
+        [Required, EmailAddress, StringLength(150)]
         public string Email { get; set; }
 
+        [Required, StringLength(15)]
+        public string PhoneNumber { get; set; }
+
         [Required]
-        [StringLength(255)]
         public string PasswordHash { get; set; }
 
-        public string? ProfileImage { get; set; }
-
-        public bool IsActive { get; set; } = true;
+        [Required]
+        public UserRole Role { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        // 🔗 Navigation Properties
+        public bool IsActive { get; set; } = true;
 
-        //public ICollection<RideRequest>? RideRequests { get; set; }
+        // Navigation
+        public Driver? Driver { get; set; }
+        public ICollection<Ride>? PassengerRides { get; set; }
     }
 }

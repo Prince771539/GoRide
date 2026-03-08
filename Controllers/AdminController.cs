@@ -1,75 +1,187 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using GoRide.Models;
 using GoRide.Models.ViewModels;
+using GoRide.Models.ViewModels.Admin;
+using GoRide.Models.ViewModels.Ride;
+using GoRide.Models.ViewModels.Vehicle;
+using GoRide.DBData;
+using GoRide.Filters;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace GoRide.Controllers
 {
+    [SessionAuth(Models.Enums.UserRole.Admin)]
     public class AdminController : Controller
     {
-        public IActionResult Dashboard()
+        private readonly AddDbContext _context;
+
+        public AdminController(AddDbContext context)
         {
-            var model = new AdminDashboardViewModel
+            _context = context;
+        }
+
+        public async Task<IActionResult> Dashboard()
+        {
+            var totalUsers = await _context.Users.CountAsync(u => u.Role == Models.Enums.UserRole.Passenger);
+            var totalDrivers = await _context.Drivers.CountAsync();
+            var activeRides = await _context.Rides.CountAsync(r => r.Status == Models.Enums.RideStatus.Started || r.Status == Models.Enums.RideStatus.Accepted);
+
+            var model = new AdminStatsVM
             {
-                TotalUsers = 120,
-                TotalDrivers = 45,
-                TotalRides = 1500,
-                TotalRevenue = 250000.00,
-                RecentRides = new List<RideViewModel>
-                {
-                    new RideViewModel { RideId = "R1001", DriverName = "Mike", PickupLocation = "A", DropLocation = "B", Fare = 50, Status = "Completed" }
-                }
+                TotalUsers = totalUsers,
+                TotalDrivers = totalDrivers,
+                ActiveRides = activeRides,
+                TotalRevenue = 50000.00 // Placeholder logic for revenue
             };
             return View(model);
         }
 
-        public IActionResult UsersList()
+        public async Task<IActionResult> UsersList()
         {
-            var users = new List<UserListViewModel>
-            {
-                new UserListViewModel { Id = 1, Name = "John Doe", Email = "john@example.com", Role = "Passenger", Status = "Active", JoinDate = DateTime.Now.AddMonths(-1) },
-                new UserListViewModel { Id = 2, Name = "Jane Smith", Email = "jane@example.com", Role = "Passenger", Status = "Blocked", JoinDate = DateTime.Now.AddMonths(-2) }
+            var users = await _context.Users
+                .Where(u => u.Role == Models.Enums.UserRole.Passenger)
+                .Select(u => new UserListViewModel
+                {
+                    Id = u.UserId,
+                    Name = u.FullName,
+                    Email = u.Email,
+                    Role = u.Role.ToString(),
+                    Status = u.IsActive ? "Active" : "Inactive",
+                    JoinDate = u.CreatedAt
+                }).ToListAsync();
 
-            };
             return View(users);
         }
 
-        public IActionResult DriversList()
+        public async Task<IActionResult> DriversList()
         {
-            var drivers = new List<UserListViewModel>
-            {
-                new UserListViewModel { Id = 3, Name = "Mike Ross", Email = "mike@driver.com", Role = "Driver", Status = "Active", JoinDate = DateTime.Now.AddMonths(-3) }
-            };
+            var drivers = await _context.Drivers
+                .Include(d => d.User)
+                .Select(d => new UserListVM
+                {
+                    Id = d.Id,
+                    Name = d.User.FullName,
+                    Email = d.User.Email,
+                    Role = "Driver",
+                    Status = d.IsApproved ? "Approved" : "Pending",
+                    JoinedDate = d.User.CreatedAt
+                }).ToListAsync();
+
             return View(drivers);
         }
-        
+
         public IActionResult RidesList()
         {
-            var rides = new List<RideViewModel>
+            // Dummy for now, can implement same as above later
+            var rides = new List<RideHistoryVM>
             {
-                 new RideViewModel { RideId = "R555", DriverName = "Mike", PickupLocation = "X", DropLocation = "Y", Fare = 200, Status = "Cancelled", Date = DateTime.Now }
+                 new RideHistoryVM { RideId = "R1001", Date = DateTime.Now, DriverName = "Mike", Pickup = "A", Drop = "B", Fare = 100, Status = "Completed" }
             };
             return View(rides);
         }
 
-        public IActionResult VehicleList()
+        public async Task<IActionResult> VehicleList()
         {
-            var vehicles = new List<VehicleViewModel>
-            {
-                new VehicleViewModel { Id = 1, Name = "Bike", Type = "Bike", Capacity = 1, IconUrl = "bi-bicycle" },
-                new VehicleViewModel { Id = 2, Name = "Standard Car", Type = "Car", Capacity = 4, IconUrl = "bi-car-front" },
-                new VehicleViewModel { Id = 3, Name = "SUV", Type = "Car", Capacity = 6, IconUrl = "bi-truck" }
-            };
+            var vehicles = await _context.VehicleTypes
+                .Select(v => new VehicleTypeVM
+                {
+                    Id = v.Id,
+                    Name = v.Name,
+                    BaseFare = (double)v.BaseFare,
+                    PerKmRate = (double)v.PerKmRate,
+                    PerMinuteRate = (double)v.PerMinuteRate
+                }).ToListAsync();
+
             return View(vehicles);
+        }
+
+        [HttpGet]
+        public IActionResult AddVehicle()
+        {
+            return View(new VehicleTypeCreateVM());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddVehicle(VehicleTypeCreateVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var vt = new VehicleType
+                {
+                    Name = model.Name,
+                    BaseFare = (decimal)model.BaseFare,
+                    PerKmRate = (decimal)model.PerKmRate,
+                    PerMinuteRate = (decimal)model.PerMinuteRate,
+                    IsActive = true
+                };
+
+                _context.VehicleTypes.Add(vt);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(VehicleList));
+            }
+            return View(model);
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> EditVehicle(int id)
+        {
+            var v = await _context.VehicleTypes.FindAsync(id);
+            if (v == null) return NotFound();
+
+            var model = new VehicleTypeEditVM
+            {
+                Id = v.Id,
+                Name = v.Name,
+                BaseFare = (double)v.BaseFare,
+                PerKmRate = (double)v.PerKmRate,
+                PerMinuteRate = (double)v.PerMinuteRate
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditVehicle(VehicleTypeEditVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var v = await _context.VehicleTypes.FindAsync(model.Id);
+                if (v == null) return NotFound();
+
+                v.Name = model.Name;
+                v.BaseFare = (decimal)model.BaseFare;
+                v.PerKmRate = (decimal)model.PerKmRate;
+                v.PerMinuteRate = (decimal)model.PerMinuteRate;
+
+                _context.VehicleTypes.Update(v);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(VehicleList));
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteVehicle(int id)
+        {
+            var v = await _context.VehicleTypes.FindAsync(id);
+            if (v != null)
+            {
+                _context.VehicleTypes.Remove(v);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(VehicleList));
         }
 
         public IActionResult FareSettings()
         {
-            var model = new FareSettingsViewModel
+            var model = new SettingsVM
             {
-                BaseFareBike = 20,
-                PerKmBike = 8,
-                BaseFareCar = 40,
-                PerKmCar = 12,
-                SurgeMultiplier = 1.0
+                SurgeMultiplier = 1.0,
+                PlatformFeePercentage = 15.0
             };
             return View(model);
         }

@@ -10,7 +10,7 @@
             <div class="card card-custom p-4">
                 <div class="text-center mb-4">
                     <i class="bi bi-person-circle fs-1 text-primary"></i>
-                    <h3 class="mt-2">Passenger Login</h3>
+                    <h3 class="mt-2">Login</h3>
                 </div>
                 <form asp-action="UserLogin" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -48,7 +48,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

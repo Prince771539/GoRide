@@ -1,50 +1,38 @@
-@model GoRide.Models.ViewModels.UserProfileViewModel
+@model GoRide.Models.ViewModels.User.ProfileVM
 
 @{
     ViewData["Title"] = "My Profile";
 }
 
-<div class="container py-5">
+<div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card card-custom p-4">
-                <div class="text-center mb-4 border-bottom pb-4">
-                    <div class="bg-secondary rounded-circle d-inline-block p-4 mb-3 text-white">
-                        <i class="bi bi-person-fill display-4"></i>
+        <div class="col-md-8 col-lg-6">
+            <div class="card card-custom border-0 p-5 mt-4">
+                <div class="text-center mb-4">
+                    <div class="avatar-circle bg-primary fs-1 mx-auto mb-3" style="width: 100px; height: 100px;">
+                        @Model.FullName.Substring(0,1)
                     </div>
-                    <h3>@Model.FullName</h3>
+                    <h3 class="fw-bold">@Model.FullName</h3>
                     <p class="text-muted">Passenger</p>
                 </div>
-                
-                <form>
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label text-muted">Full Name</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control-plaintext fw-bold" readonly value="@Model.FullName" />
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label text-muted">Email</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control-plaintext fw-bold" readonly value="@Model.Email" />
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label text-muted">Phone</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control-plaintext fw-bold" readonly value="@Model.Phone" />
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label text-muted">Address</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control-plaintext fw-bold" readonly value="@Model.Address" />
-                        </div>
-                    </div>
 
-                    <div class="text-center mt-4">
-                        <button type="button" class="btn btn-outline-primary me-2">Edit Profile</button>
-                        <button type="button" class="btn btn-outline-danger">Change Password</button>
+                <form class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small">EMAIL ADDRESS</label>
+                        <input type="email" class="form-control" value="@Model.Email" readonly disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small">PHONE NUMBER</label>
+                        <input type="text" class="form-control" value="@Model.Phone" readonly disabled>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label text-muted small">ADDRESS</label>
+                        <input type="text" class="form-control" value="@Model.Address" readonly disabled>
+                    </div>
+                    
+                    <div class="col-12 mt-4 text-center">
+                         <button type="button" class="btn btn-outline-primary px-4">Edit Profile</button>
+                         <button type="button" class="btn btn-outline-danger px-4 ms-2">Change Password</button>
                     </div>
                 </form>
             </div>

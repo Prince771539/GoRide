@@ -1,28 +1,44 @@
-@model IEnumerable<GoRide.Models.ViewModels.VehicleViewModel>
+@model IEnumerable<GoRide.Models.ViewModels.Vehicle.VehicleTypeVM>
 
 @{
-    ViewData["Title"] = "Vehicle Types";
+    ViewData["Title"] = "Vehicle Management";
 }
 
-<div class="container py-4">
+<div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Vehicle Types</h2>
-        <button class="btn btn-success"><i class="bi bi-plus-lg"></i> Add Vehicle Type</button>
+        <h3>Vehicle Types</h3>
+        <a asp-action="AddVehicle" class="btn btn-warning"><i class="bi bi-plus-lg"></i> Add New Type</a>
     </div>
 
-    <div class="row">
+    <div class="row g-4">
         @foreach (var item in Model)
         {
-            <div class="col-md-4 mb-4">
-                <div class="card card-custom h-100 text-center p-4">
-                    <div class="mb-3 text-primary">
-                        <i class="bi @item.IconUrl fs-1"></i>
+            <div class="col-md-4 col-lg-3">
+                <div class="card card-custom h-100 text-center p-4 border-0">
+                    <div class="mb-3 text-primary bg-light rounded-circle d-inline-flex p-3 mx-auto" style="width: 80px; height: 80px; align-items: center; justify-content: center;">
+                        <i class="bi @item.IconClass fs-1"></i>
                     </div>
-                    <h3>@item.Name</h3>
-                    <p class="text-muted">Type: @item.Type | Capacity: @item.Capacity</p>
-                    <div class="d-flex justify-content-center gap-2">
-                        <button class="btn btn-outline-secondary">Edit</button>
-                        <button class="btn btn-outline-danger">Delete</button>
+                    <h4 class="mb-1">@item.Name</h4>
+                    <p class="text-muted small mb-3">Capacity: @item.Capacity Ppl</p>
+                    
+                    <ul class="list-group list-group-flush text-start small mb-3">
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span>Base Fare</span>
+                            <span class="fw-bold">$@item.BaseFare</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span>Per KM</span>
+                            <span class="fw-bold">$@item.PerKmRate</span>
+                        </li>
+                         <li class="list-group-item d-flex justify-content-between px-0">
+                            <span>Per Min</span>
+                            <span class="fw-bold">$@item.PerMinuteRate</span>
+                        </li>
+                    </ul>
+
+                    <div class="d-flex justify-content-center gap-2 mt-auto">
+                        <button class="btn btn-sm btn-outline-secondary px-3">Edit</button>
+                        <button class="btn btn-sm btn-outline-danger px-3">Remove</button>
                     </div>
                 </div>
             </div>

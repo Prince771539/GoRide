@@ -4,73 +4,55 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - GoRide</title>
-    
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
             <div class="container">
-                <a class="navbar-brand d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
-                    <i class="bi bi-car-front-fill fs-4"></i> GoRide
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-car-front-fill me-2"></i>GoRide
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-white" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-controller="Home" asp-action="About">About</a>
                         </li>
                          <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="About">About</a>
-                        </li>
-                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a>
+                            <a class="nav-link text-white" asp-controller="Home" asp-action="Contact">Contact</a>
                         </li>
                     </ul>
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Dropdown Mockup for Modules -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-person-circle"></i> Account
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><h6 class="dropdown-header">Passenger</h6></li>
-                                <li><a class="dropdown-item" asp-controller="Account" asp-action="UserLogin">Login</a></li>
-                                <li><a class="dropdown-item" asp-controller="Account" asp-action="UserRegister">Register</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><h6 class="dropdown-header">Driver</h6></li>
-                                <li><a class="dropdown-item" asp-controller="Account" asp-action="DriverLogin">Driver Login</a></li>
-                                <li><a class="dropdown-item" asp-controller="Account" asp-action="DriverRegister">Become a Driver</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" asp-controller="Admin" asp-action="Dashboard">Admin Login</a></li>
-                            </ul>
-                        </li>
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link text-white fw-bold" asp-controller="Account" asp-action="UserLogin">Login</a></li>
+                        <li class="nav-item"><a class="btn btn-light text-primary fw-bold ms-2 rounded-pill shadow-sm" asp-controller="Account" asp-action="UserRegister">Sign Up</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-
-    <div class="container-fluid p-0">
+    
+    <div class="flex-grow-1">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted mt-5 py-4">
-        <div class="container text-center">
-            &copy; 2024 - GoRide - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="bg-white border-top py-4 mt-auto">
+        <div class="container text-center text-muted">
+            &copy; 2024 - GoRide Inc. - <a asp-controller="Home" asp-action="Privacy">Privacy</a> - <a href="#">Terms</a>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

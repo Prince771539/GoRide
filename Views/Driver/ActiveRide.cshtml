@@ -1,72 +1,62 @@
-@model GoRide.Models.ViewModels.RideViewModel
+@model GoRide.Models.ViewModels.Ride.LiveTrackingVM
 
 @{
-    ViewData["Title"] = "Active Ride";
+    ViewData["Title"] = "Active Trip";
 }
 
-<div class="container-fluid p-0">
-    <div class="row g-0">
-        <!-- Navigation Map -->
-        <div class="col-lg-8">
-             <div class="map-placeholder h-100 position-relative" style="min-height: 85vh; background-color: #343a40; color: white;">
-                <div class="text-center">
-                    <i class="bi bi-cursor-fill fs-1 text-primary"></i>
-                    <h3>Navigation Mode</h3>
-                    <p>Turn-by-turn navigation simulation...</p>
-                </div>
-                 <!-- Simulation of route line -->
-                 <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
-                     <path d="M 200 200 Q 400 50 600 300 T 1000 400" stroke="#0d6efd" stroke-width="5" fill="none" />
-                 </svg>
+<div class="container-fluid pb-5">
+    <!-- Navigation Header -->
+    <div class="bg-dark text-white p-3 rounded-top mb-3 d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="mb-0">200m</h2>
+            <small>Turn right onto Main Street</small>
+        </div>
+        <i class="bi bi-arrow-right fs-1"></i>
+    </div>
+
+    <div class="row">
+        <!-- Map -->
+        <div class="col-lg-8 mb-3">
+             <div class="map-container shadow-sm border rounded" style="height: 60vh;">
+                <div class="map-marker"><i class="bi bi-cursor-fill"></i></div>
             </div>
         </div>
 
-        <!-- Trip Controls -->
-        <div class="col-lg-4 bg-white shadow-lg border-start">
-            <div class="p-4 d-flex flex-column h-100">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4 class="mb-0">Ongoing Trip</h4>
-                    <span class="badge bg-primary">Navigating</span>
+        <!-- Controls -->
+        <div class="col-lg-4">
+            <div class="card card-custom h-100 p-4">
+                <div class="d-flex justify-content-between mb-4">
+                    <div>
+                        <h5 class="mb-1">@ViewData["PassengerName"]</h5>
+                        <div class="text-muted"><i class="bi bi-star-fill text-warning"></i> 4.8</div>
+                    </div>
+                    <a href="tel:@ViewData["PassengerPhone"]" class="btn btn-success rounded-circle p-3 d-flex align-items-center justify-content-center" style="width:50px; height:50px;">
+                        <i class="bi bi-telephone-fill"></i>
+                    </a>
                 </div>
 
-                <div class="card card-custom mb-4 bg-light border-0">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-white rounded-circle p-3 me-3 shadow-sm">
-                                <i class="bi bi-person-fill fs-3"></i>
-                            </div>
-                            <div>
-                                <h5 class="mb-0">@ViewBag.PassengerName</h5>
-                                <a href="tel:@ViewBag.PassengerPhone" class="text-decoration-none">Call Passenger</a>
-                            </div>
-                            <div class="ms-auto">
-                                <h3 class="fw-bold text-success mb-0">$@Model.Fare</h3>
-                            </div>
-                        </div>
+                <div class="timeline ps-3 border-start ms-2 mb-4">
+                    <div class="position-relative mb-4 ps-4">
+                        <i class="bi bi-dot position-absolute top-0 start-0 translate-middle-x fs-1 text-success bg-white"></i>
+                        <small class="text-muted">PICKUP</small>
+                        <p class="mb-0 fw-bold">Tech Park Gate 1</p>
+                    </div>
+                    <div class="position-relative ps-4">
+                        <i class="bi bi-geo-alt-fill position-absolute top-0 start-0 translate-middle-x text-danger bg-white p-1"></i>
+                        <small class="text-muted">DROP</small>
+                        <p class="mb-0 fw-bold">Metro Station</p>
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <div class="d-flex align-items-start mb-4">
-                        <i class="bi bi-circle-fill text-success mt-1 me-3"></i>
-                        <div>
-                            <small class="text-muted">PICKUP</small>
-                            <h5 class="fw-bold">@Model.PickupLocation</h5>
-                        </div>
+                <div class="mt-auto">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary btn-lg py-3">
+                            <i class="bi bi-geo-alt me-2"></i> Navigate
+                        </button>
+                        <button class="btn btn-success btn-lg py-3">
+                            Complete Ride
+                        </button>
                     </div>
-                    <div class="d-flex align-items-start">
-                        <i class="bi bi-geo-alt-fill text-danger mt-1 me-3"></i>
-                        <div>
-                            <small class="text-muted">DROP OFF</small>
-                            <h5 class="fw-bold">@Model.DropLocation</h5>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-auto d-grid gap-2">
-                    <button class="btn btn-primary btn-lg">Navigate to Pickup</button>
-                    <button class="btn btn-success btn-lg py-3 fw-bold">Complete Ride</button>
-                    <button class="btn btn-outline-danger">Cancel Trip</button>
                 </div>
             </div>
         </div>
